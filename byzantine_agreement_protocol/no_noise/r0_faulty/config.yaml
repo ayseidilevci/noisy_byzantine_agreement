@@ -1,0 +1,100 @@
+# 3 node network, all the sources of noise have been disabled for this example
+qdevice_cfg: &qdevice_cfg
+  num_qubits: 200
+
+  # initialization error of the electron spin
+  electron_init_depolar_prob: 0
+
+  # error of the single-qubit gate
+  electron_single_qubit_depolar_prob: 0
+
+  # measurement errors (prob_error_X is the probability that outcome X is flipped to 1 - X)
+  # Chance of 0 being measured as 1
+  prob_error_0: 0.0
+  # Chance of 1 being measured as 0
+  prob_error_1: 0.0
+
+  # initialization error of the carbon nuclear spin
+  carbon_init_depolar_prob: 0
+
+  # error of the Z-rotation gate on the carbon nuclear spin
+  carbon_z_rot_depolar_prob: 0
+
+  # error of the native NV two-qubit gate
+  ec_gate_depolar_prob: 0
+
+  # coherence times
+  electron_T1: 0
+  electron_T2: 0
+  carbon_T1: 0
+  carbon_T2: 0
+
+  # gate execution times
+  carbon_init: 0
+  carbon_rot_x: 0
+  carbon_rot_y: 0
+  carbon_rot_z: 0
+  electron_init: 0
+  electron_rot_x: 0
+  electron_rot_y: 0
+  electron_rot_z: 0
+  ec_controlled_dir_x: 0
+  ec_controlled_dir_y: 0
+  measure: 0
+
+stacks:
+  - name: S
+    qdevice_typ: nv
+    qdevice_cfg:
+      <<: *qdevice_cfg
+      num_qubits: 4
+
+  - name: R0
+    qdevice_typ: nv
+    qdevice_cfg:
+      <<: *qdevice_cfg
+
+  - name: R1
+    qdevice_typ: nv
+    qdevice_cfg:
+      <<: *qdevice_cfg
+
+
+link_cfg: &link_cfg
+  fidelity: 1
+  prob_success: 1.0
+  t_cycle: 1e5
+
+links:
+  - stack1: S
+    stack2: R0
+    typ: depolarise
+    cfg:
+      <<: *link_cfg
+  - stack1: S
+    stack2: R1
+    typ: depolarise
+    cfg:
+      <<: *link_cfg
+  - stack1: R0
+    stack2: R1
+    typ: depolarise
+    cfg:
+      <<: *link_cfg
+
+clinks:
+  - stack1: S
+    stack2: R0
+    typ: default
+    cfg:
+      delay: 5e3
+  - stack1: S
+    stack2: R1
+    typ: default
+    cfg:
+      delay: 1e4
+  - stack1: R0
+    stack2: R1
+    typ: default
+    cfg:
+      delay: 1e4
