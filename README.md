@@ -1,8 +1,8 @@
 # Byzantine Agreement Protocol in a Small Quantum Network
 
+This project was developed as part of the [TU Delft CSE Research Project](https://github.com/TU-Delft-CSE/Research-Project) during Quarter 4 of the 2025 academic year.
 
 ## Project Files
-
 
 The repository is organized into 3 subfolders:
 
